@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+namespace :incinerator do
+  desc "Check if there are any models that are not added to the Incinerator"
+  task check_for_missing_models: :environment do
+    missed_models = OrgIncineration::MissedModelsFinderService.new.get
+
+    if missed_models.empty?
+      puts "Incinerator is up to date"
+    else
+      raise "\nPlease add incineration configuration for #{missed_models.join(',')} in models/concerns/incineratable_concern.rb\n\n"
+    end
+  end
+end

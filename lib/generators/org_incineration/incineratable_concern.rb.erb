@@ -1,0 +1,35 @@
+# frozen_string_literal: true
+
+module IncineratableConcern
+  extend ActiveSupport::Concern
+
+  DAYS_AFTER_CANCELLATION_WHEN_ORGANIZATION_IS_INCINERATED = OrgIncineration::Incinerator::DAYS_AFTER_CANCELLATION_WHEN_ORGANIZATION_IS_INCINERATED
+
+  def incineratable?
+    cancelled? && cancelled_at.to_date < Date.today - DAYS_AFTER_CANCELLATION_WHEN_ORGANIZATION_IS_INCINERATED.days
+  end
+
+  SKIPPED_MODELS =  ["Model1", "Model2"]
+  MODELS_REQUIRE_DESTROY = ["Model3", "Model4"]
+
+  included do
+    scope :incineratables, -> { cancelled.where("Date(cancelled_at) < ?", Date.today - DAYS_AFTER_CANCELLATION_WHEN_ORGANIZATION_IS_INCINERATED.days) }
+
+    def self.associated_models(org_id)
+      {
+        # "Payment": {
+        #   joins: :invoice,
+        #   where: ["organization_id =?", org_id]
+        # },
+        # "OrganizationUser": {
+        #   joins: {},
+        #   where: ["organization_id =?", org_id]
+        # },
+        # "Invoice": {
+        #   joins: {},
+        #   where: ["organization_id =?", org_id]
+        # }
+      }
+    end
+  end
+end
