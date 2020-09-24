@@ -1,8 +1,9 @@
 # OrgIncineration
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/org_incineration`. To experiment with that code, run `bin/console` for an interactive prompt.
+This is a gem that is used to add the Organization's Incineration functionality in your application.
+Incineration a nonreversible task, and it systematically incinerates all the records.
 
-TODO: Delete this and the text above, and describe your gem
+This gem injects rake task, background and concerns file to facilitate the incineration process.
 
 ## Installation
 
@@ -16,13 +17,54 @@ And then execute:
 
     $ bundle install
 
-Or install it yourself as:
+Then run the generator:
 
-    $ gem install org_incineration
+    $ rails generate org_incineration:setup
+
+This would add 3 files:
+- app/models/concerns/incineratable_concern.rb
+- app/jobs/organization_incineration_job.rb
+- lib/tasks/incinerator.rake
+
+Requirements:
+- Application must have Organization model.
+- Organization model must have enum status column with values [active, cancelled].
+- Also to track the duration of cancelled organization the organization model must have cancelled_at:DateTime column which should set the DateTime at which the organization have been marked as cancelled.
+
 
 ## Usage
+Modifing the `IncineratableConcern` file.
+You need to set 2 constant variables and a method.
 
-TODO: Write usage instructions here
+### Constants:
+
+*SKIPPED_MODELS*: Assign the Array of model names in string which need to be skipped from the incineration process.
+
+*MODELS_REQUIRE_DESTROY*: Normally the records are incinerated by `delete_all` command but if some models needs `destroy` then it needs to be mentioned here.
+
+### Method:
+associated_models: You need to mention all the relationships of all the models with Organization.
+eg:
+```
+{
+    "Payment": {
+      joins: :invoice,
+      where: ["organization_id =?", org_id]
+    },
+    "OrganizationUser": {
+      joins: {},
+      where: ["organization_id =?", org_id]
+    },
+    "Invoice": {
+      joins: {},
+      where: ["organization_id =?", org_id]
+    }
+}
+```
+
+
+Include the `IncineratableConcern` in your Organization model.
+
 
 ## Development
 
