@@ -38,12 +38,12 @@ You need to set 2 constant variables and a method.
 
 ### Constants:
 
-*SKIPPED_MODELS*: Assign the Array of model names in string which need to be skipped from the incineration process.
+`SKIPPED_MODELS`: Assign the Array of model names in string which need to be skipped from the incineration process.
 
-*MODELS_REQUIRE_DESTROY*: Normally the records are incinerated by `delete_all` command but if some models needs `destroy` then it needs to be mentioned here.
+`MODELS_REQUIRE_DESTROY`: Normally the records are incinerated by `delete_all` command but if some models needs `destroy` then it needs to be mentioned here.
 
 ### Method:
-associated_models: You need to mention all the relationships of all the models with Organization.
+`associated_models`: You need to mention all the relationships of all the models with Organization.
 eg:
 ```
 {
@@ -65,6 +65,16 @@ eg:
 
 Include the `IncineratableConcern` in your Organization model.
 
+### Background Job
+
+`OrganizationIncinerationJob` is added to the Jobs folder.
+By deafult its using DelayedJob, according to the application you can change it to work with sidekiq.
+Change `include Delayed::RecurringJob` => `self.queue_adapter = :sidekiq`
+
+Also, this job runs daily at 12.30 am UTC.
+
+Organization that are cancelled `30 days` before would be incinerated in this job.
+
 
 ## Development
 
@@ -74,7 +84,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/org_incineration. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/org_incineration/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/bigbinary/org_incineration. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/bigbinary/org_incineration/blob/master/CODE_OF_CONDUCT.md).
 
 
 ## License
@@ -83,4 +93,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the OrgIncineration project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/org_incineration/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the OrgIncineration project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/bigbinary/org_incineration/blob/master/CODE_OF_CONDUCT.md).
