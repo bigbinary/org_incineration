@@ -9,10 +9,8 @@ class OrganizationIncinerationJob < ApplicationJob
   queue "default"
 
   def perform
-    if ((organizations = Organization.incineratables)).any?
-      organizations.each do |organization|
-        OrgIncineration::Incinerator.new(organization).run!
-      end
+    Organization.incinerables.each do |organization|
+      OrgIncineration::Incinerator.new(organization).run!
     end
   end
 end

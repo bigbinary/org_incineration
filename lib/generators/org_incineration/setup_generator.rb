@@ -6,11 +6,11 @@ module OrgIncineration
         File.dirname(__FILE__)
       end
 
-      desc "This would create a incineratable_concern.rb file where you can add all the dependencies."
+      desc "This would create a incinerable_concern.rb file where you can add all the dependencies."
       def add_concern_file
-        template("incineratable_concern.rb.erb", "app/models/concerns/incineratable_concern.rb")
-        puts "IncineratableConcern concern added"
-        puts "Please include IncineratableConcern within your Organization model."
+        template("incinerable_concern.rb.erb", "app/models/concerns/incinerable_concern.rb")
+        puts "IncinerableConcern concern added"
+        puts "Please include IncinerableConcern within your Organization model."
       end
 
       desc "This would create a rake task which could be used to check if any model is missed from the incineration process."

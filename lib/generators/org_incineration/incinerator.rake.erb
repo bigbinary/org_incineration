@@ -8,7 +8,7 @@ namespace :incinerator do
     if missed_models.empty?
       puts "Incinerator is up to date"
     else
-      raise "\nPlease add incineration configuration for #{missed_models.join(',')} in models/concerns/incineratable_concern.rb\n\n"
+      raise "\nPlease add incineration configuration for #{missed_models.join(',')} in models/concerns/incinerable_concern.rb\n\n"
     end
   end
 end

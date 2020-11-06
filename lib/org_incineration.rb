@@ -6,7 +6,7 @@ require "org_incineration/errors"
 
 module OrgIncineration
   class Incinerator
-    DAYS_AFTER_CANCELLATION_WHEN_ORGANIZATION_IS_INCINERATED = 30
+    RETENTION_DAYS = 30
 
     def initialize(organization)
       @org = organization

@@ -1,19 +1,23 @@
 # frozen_string_literal: true
 
-module IncineratableConcern
+module IncinerableConcern
   extend ActiveSupport::Concern
 
-  DAYS_AFTER_CANCELLATION_WHEN_ORGANIZATION_IS_INCINERATED = OrgIncineration::Incinerator::DAYS_AFTER_CANCELLATION_WHEN_ORGANIZATION_IS_INCINERATED
+  RETENTION_DAYS = OrgIncineration::Incinerator::RETENTION_DAYS
 
-  def incineratable?
-    cancelled? && cancelled_at.to_date < Date.today - DAYS_AFTER_CANCELLATION_WHEN_ORGANIZATION_IS_INCINERATED.days
+  def incinerable?
+    cancelled? && cancelled_at.to_date < retention_date
+  end
+
+  def retention_date
+    Date.today - RETENTION_DAYS.days
   end
 
   SKIPPED_MODELS =  ["Model1", "Model2"]
   MODELS_REQUIRE_DESTROY = ["Model3", "Model4"]
 
   included do
-    scope :incineratables, -> { cancelled.where("Date(cancelled_at) < ?", Date.today - DAYS_AFTER_CANCELLATION_WHEN_ORGANIZATION_IS_INCINERATED.days) }
+    scope :incinerables, -> { cancelled.where("Date(cancelled_at) < ?", retention_date) }
 
     def self.associated_models(org_id)
       {

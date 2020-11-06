@@ -22,7 +22,7 @@ Then run the generator:
     $ rails generate org_incineration:setup
 
 This would add 3 files:
-- app/models/concerns/incineratable_concern.rb
+- app/models/concerns/incinerable_concern.rb
 - app/jobs/organization_incineration_job.rb
 - lib/tasks/incinerator.rake
 
@@ -33,7 +33,7 @@ Requirements:
 
 
 ## Usage
-Modifing the `IncineratableConcern` file.
+Modifing the `IncinerableConcern` file.
 You need to set 2 constant variables and a method.
 
 ### Constants:
@@ -63,7 +63,7 @@ eg:
 ```
 
 
-Include the `IncineratableConcern` in your Organization model.
+Include the `IncinerableConcern` in your Organization model.
 
 ### Background Job
 
