@@ -61,6 +61,10 @@ module OrgIncineration
         puts "Incinerating #{_model}..."
 
         model   = _model.constantize
+        if model_hash.has_key?(:scope)
+          model = model.send(model_hash[:scope])
+        end
+
         records = model.joins(model_hash[:joins]).where(model_hash[:where])
 
         method = models_that_need_destroy.include?(_model) ? "destroy_all" : "delete_all"

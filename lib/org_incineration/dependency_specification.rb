@@ -28,7 +28,7 @@ module OrgIncineration
       begin
         @_get ||= Organization.associated_models(@org.id)
       rescue NoMethodError
-        raise IncinerableConcernNotIncluded, "IncinerableConcern not included in th Organization model."
+        raise IncinerableConcernNotIncluded, "IncinerableConcern not included in the Organization model."
       end
     end
   end
