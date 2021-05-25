@@ -18,13 +18,6 @@ module OrgIncineration
         template("incinerator.rake.erb", "lib/tasks/incinerator.rake")
         puts "check_for_missing_models rake task added"
       end
-
-      desc "This would create a job for organization incineration which would run daily."
-      def add_incineration_job_file
-        template("organization_incineration_job.rb.erb", "app/jobs/organization_incineration_job.rb")
-        puts "OrganizationIncinerationJob added."
-        puts "Setup completed!"
-      end
     end
   end
 end
