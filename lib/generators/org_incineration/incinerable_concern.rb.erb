@@ -7,6 +7,10 @@ module IncinerableConcern
   MODELS_REQUIRE_DESTROY = ["Model3", "Model4"]
 
   included do
+    def incinerate!
+      OrgIncineration::Incinerator.new(self).run!
+    end
+
     def self.associated_models(org_id)
       {
         # "Payment": {
