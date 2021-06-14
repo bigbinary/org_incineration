@@ -7,7 +7,7 @@ module OrgIncineration
     end
 
     def all_models
-      @_all_models ||= DependencySorter.new.all_models
+      @_all_models ||= DependencySorter.new(cyclic_dependencies).all_models
     end
 
     def skipped_models
@@ -18,6 +18,18 @@ module OrgIncineration
     # that have join tables on which foreign key contraints are specified
     def models_that_need_destroy
       Organization::MODELS_REQUIRE_DESTROY
+    end
+
+    # Special cases. Eg: Models that have cyclic relationships between each other.
+    # class Organization
+    #   has_many :users
+    # end
+    # class User
+    #   belongs_to :organization
+    # end
+    # In the above case, the Organization and User models are cyclically related to each other.
+    def cyclic_dependencies
+      Organization::CYCLIC_DEPENDENCIES
     end
 
     def configured_models

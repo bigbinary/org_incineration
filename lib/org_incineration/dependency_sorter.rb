@@ -4,11 +4,21 @@ require "tsort"
 
 module OrgIncineration
   class DependencySorter
+    def initialize(cyclic_dependencies)
+      @cyclic_dependencies = cyclic_dependencies
+    end
+
     def get
       m = Model.new
 
       all_models.each do |model|
-        m.add_requirement(model, find_dependencies(model))
+        dependencies = find_dependencies(model)
+        skipped_dependencies = if @cyclic_dependencies.keys.include? model
+          @cyclic_dependencies[model]
+        else
+          []
+        end
+        m.add_requirement(model, dependencies - skipped_dependencies)
       end
 
       m.tsort.reverse.select do |m|
@@ -24,11 +34,19 @@ module OrgIncineration
 
     def all_models
       Rails.application.eager_load!
-      ApplicationRecord.descendants.map(&:to_s)
+      ApplicationRecord.descendants.map { |class_name| sanitize_class_name(class_name) }
     end
 
     def parent_models(klass)
-      klass.constantize.reflections.values.select { |x| x.class.to_s.include?("::Belong") }.map(&:class_name)
+      klass.constantize.reflections.values
+        .select { |x| x.class.to_s.include?("::Belong") }
+        .map { |x| sanitize_class_name(x.class_name) }
     end
+
+    private
+      def sanitize_class_name(class_name)
+        c_name = class_name.to_s
+        c_name.start_with?("::") ? c_name[2, c_name.length - 2] : c_name
+      end
   end
 end
