@@ -15,7 +15,6 @@ module OrgIncineration
     private
 
       def delete_organization
-        puts "Deleting organization"
         @org.reload.delete
       end
 
@@ -39,7 +38,7 @@ module OrgIncineration
       end
 
       def sorted_dependencies
-        DependencySorter.new.get
+        DependencySorter.new(dependency_specification.cyclic_dependencies).get
       end
 
       def models_that_need_destroy
@@ -47,9 +46,9 @@ module OrgIncineration
       end
 
       def incinerate!(_model, model_hash)
-        puts "Incinerating #{_model}..."
-
         model   = _model.constantize
+        model = model.respond_to?(:with_deleted) ? model.with_deleted : model
+
         records = model.joins(model_hash[:joins]).where(model_hash[:where])
 
         method = models_that_need_destroy.include?(_model) ? "destroy_all" : "delete_all"
@@ -57,8 +56,6 @@ module OrgIncineration
         result = records.send(method)
 
         count = result.respond_to?(:count) ? result.count : result
-
-        puts "----#{count} records deleted"
       end
   end
 end

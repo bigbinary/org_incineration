@@ -26,7 +26,6 @@ module OrgIncineration
       end
 
       def delete_organization
-        puts "Deleting organization"
         @org.reload.delete
       end
 
@@ -58,8 +57,6 @@ module OrgIncineration
       end
 
       def incinerate!(_model, model_hash)
-        puts "Incinerating #{_model}..."
-
         model   = _model.constantize
         if model_hash.has_key?(:scope)
           model = model.send(model_hash[:scope])
@@ -72,8 +69,6 @@ module OrgIncineration
         result = records.send(method)
 
         count = result.respond_to?(:count) ? result.count : result
-
-        puts "----#{count} records deleted"
       end
   end
 
