@@ -23,10 +23,9 @@ module OrgIncineration
     # Special cases. Eg: Models that have cyclic relationships between each other.
     # class Organization
     #   has_many :users
+    #   belongs_to :creator, class_name: "User", optional: true
     # end
-    # class User
-    #   belongs_to :organization
-    # end
+    #
     # In the above case, the Organization and User models are cyclically related to each other.
     def cyclic_dependencies
       Organization::CYCLIC_DEPENDENCIES
