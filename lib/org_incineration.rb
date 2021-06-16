@@ -49,7 +49,7 @@ module OrgIncineration
       end
 
       def sorted_dependencies
-        DependencySorter.new.get
+        DependencySorter.new(dependency_specification.cyclic_dependencies).get
       end
 
       def models_that_need_destroy
